@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Campus Event & Society Hub</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="home-body">
+  <div class="bg-particles" id="particles"></div>
+  <nav class="navbar" id="navbar">
+    <div class="nav-brand">
+      <span class="brand-icon">🎓</span>
+      <span class="brand-text">Smart<span class="accent">Campus</span></span>
+    </div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="societies.html">Societies</a></li>
+      <li><a href="feedback.html">Feedback</a></li>
+      <li><a href="profile.html" id="navProfile" style="display:none">My Profile</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span id="loggedUserNav" class="logged-user-nav" style="display:none"></span>
+      <button class="btn-login-nav" id="loginNavBtn" onclick="scrollToLogin()">Login</button>
+      <button class="btn-logout-nav" id="logoutNavBtn" style="display:none" onclick="logoutUser()">Logout</button>
+    </div>
+  </nav>
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <div class="hero-badge">🚀 Campus Life Reimagined</div>
+      <h1 class="hero-title">
+        Your Campus.<br/>
+        <span class="gradient-text">Smarter.</span> Livelier.
+      </h1>
+      <p class="hero-sub">
+        Discover events, join societies, connect with peers —<br/>
+        all in one powerful platform built for students.
+      </p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="scrollToLogin()">Get Started Free</button>
+        <button class="btn-ghost" onclick="window.location.href='events.html'">Browse Events →</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num" data-target="240">0</span><span class="stat-label">Events</span></div>
+        <div class="stat"><span class="stat-num" data-target="35">0</span><span class="stat-label">Societies</span></div>
+        <div class="stat"><span class="stat-num" data-target="1800">0</span><span class="stat-label">Students</span></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="floating-card card1">
+        <i class="fas fa-calendar-check"></i>
+        <span>Tech Fest 2025</span>
+        <small>Tomorrow • 10 AM</small>
+      </div>
+      <div class="floating-card card2">
+        <i class="fas fa-users"></i>
+        <span>Robotics Club</span>
+        <small>42 members</small>
+      </div>
+      <div class="floating-card card3">
+        <i class="fas fa-star"></i>
+        <span>4.9 Rating</span>
+        <small>Top rated event</small>
+      </div>
+      <div class="hero-circle"></div>
+    </div>
+  </section>
+  <section class="features-section" id="features">
+    <h2 class="section-title">Everything You Need</h2>
+    <p class="section-sub">Designed for the modern student experience</p>
+    <div class="features-grid">
+      <div class="feature-card" data-delay="0">
+        <div class="feat-icon" style="background:#6C63FF22;color:#6C63FF">
+          <i class="fas fa-calendar-alt"></i>
+        </div>
+        <h3>Event Discovery</h3>
+        <p>Browse, filter, and register for campus events in seconds. Never miss what matters.</p>
+      </div>
+      <div class="feature-card" data-delay="100">
+        <div class="feat-icon" style="background:#FF6B6B22;color:#FF6B6B">
+          <i class="fas fa-users-cog"></i>
+        </div>
+        <h3>Society Hub</h3>
+        <p>Explore and join student societies. Build your campus network and grow your skills.</p>
+      </div>
+      <div class="feature-card" data-delay="200">
+        <div class="feat-icon" style="background:#43E97B22;color:#43E97B">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <h3>Smart Profile</h3>
+        <p>Track your memberships, badges, and activities — all in your personal dashboard.</p>
+      </div>
+      <div class="feature-card" data-delay="300">
+        <div class="feat-icon" style="background:#F7971E22;color:#F7971E">
+          <i class="fas fa-star-half-alt"></i>
+        </div>
+        <h3>Feedback & Ratings</h3>
+        <p>Rate events, leave reviews, and help improve campus life for everyone.</p>
+      </div>
+    </div>
+  </section>
+  <section class="auth-section" id="authSection">
+    <div class="auth-wrapper">
+      <div class="auth-left">
+        <h2>Welcome Back!</h2>
+        <p>Log in to access your events, societies and personalized campus experience.</p>
+        <img src="https://illustrations.popsy.co/gray/student-with-laptop.svg" alt="student" class="auth-illustration" onerror="this.style.display='none'"/>
+      </div>
+      <div class="auth-card" id="authCard">
+        <div class="auth-tabs">
+          <button class="tab-btn active" id="loginTab" onclick="switchTab('login')">Login</button>
+          <button class="tab-btn" id="registerTab" onclick="switchTab('register')">Register</button>
+        </div>
+        <div id="loginForm" class="auth-form">
+          <div class="form-group">
+            <label>Email / Roll No</label>
+            <div class="input-wrap">
+              <i class="fas fa-envelope"></i>
+              <input type="text" id="loginEmail" placeholder="e.g. ali@campus.edu" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <div class="input-wrap">
+              <i class="fas fa-lock"></i>
+              <input type="password" id="loginPassword" placeholder="Enter your password" />
+              <i class="fas fa-eye toggle-pass" id="togglePass" onclick="togglePassword()"></i>
+            </div>
+          </div>
+          <div id="loginError" class="error-msg" style="display:none"></div>
+          <button class="btn-submit" onclick="loginUser()">
+            <span>Login</span> <i class="fas fa-arrow-right"></i>
+          </button>
+          <p class="switch-link">Don't have account? <a onclick="switchTab('register')">Register here</a></p>
+        </div>
+        <div id="registerForm" class="auth-form" style="display:none">
+          <div class="form-group">
+            <label>Full Name</label>
+            <div class="input-wrap">
+              <i class="fas fa-user"></i>
+              <input type="text" id="regName" placeholder="Your full name" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <div class="input-wrap">
+              <i class="fas fa-envelope"></i>
+              <input type="email" id="regEmail" placeholder="your@campus.edu" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Department</label>
+            <div class="input-wrap">
+              <i class="fas fa-building"></i>
+              <select id="regDept">
+                <option value="">Select Department</option>
+                <option>Computer Science</option>
+                <option>Software Engineering</option>
+                <option>Electrical Engineering</option>
+                <option>Business Administration</option>
+                <option>Mathematics</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <div class="input-wrap">
+              <i class="fas fa-lock"></i>
+              <input type="password" id="regPassword" placeholder="Create a password" />
+            </div>
+          </div>
+          <div id="regError" class="error-msg" style="display:none"></div>
+          <div id="regSuccess" class="success-msg" style="display:none"></div>
+          <button class="btn-submit" onclick="registerUser()">
+            <span>Create Account</span> <i class="fas fa-user-plus"></i>
+          </button>
+          <p class="switch-link">Already have account? <a onclick="switchTab('login')">Login here</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="preview-section">
+    <h2 class="section-title">Upcoming Events</h2>
+    <p class="section-sub">Hot events happening on campus this week</p>
+    <div class="events-preview-grid" id="eventsPreview"></div>
+    <div style="text-align:center;margin-top:2rem">
+      <button class="btn-primary" onclick="window.location.href='events.html'">View All Events →</button>
+    </div>
+  </section>
+  <footer class="footer">
+    <div class="footer-brand">🎓 Smart<span class="accent">Campus</span> Hub</div>
+    <p>Built with ❤️ for students, by students</p>
+    <div class="footer-links">
+      <a href="events.html">Events</a>
+      <a href="societies.html">Societies</a>
+      <a href="feedback.html">Feedback</a>
+      <a href="profile.html">Profile</a>
+    </div>
+    <p class="footer-copy">© 2025 Smart Campus. All rights reserved.</p>
+  </footer>
+  <div id="toast" class="toast"></div>
+  <script src="js/auth.js"></script>
+  <script src="js/events.js"></script>
+  <script>
+    // Particles background
+    const container = document.getElementById('particles');
+    for(let i=0;i<30;i++){
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;width:${Math.random()*6+2}px;height:${Math.random()*6+2}px;animation-delay:${Math.random()*8}s;animation-duration:${Math.random()*10+8}s`;
+      container.appendChild(p);
+    }
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+    });
+    // Counter animation
+    function animateCounters(){
+      document.querySelectorAll('.stat-num').forEach(el => {
+        const target = +el.dataset.target;
+        let count = 0;
+        const step = Math.ceil(target/60);
+        const interval = setInterval(() => {
+          count = Math.min(count+step, target);
+          el.textContent = count + (target>=100?'+':'');
+          if(count>=target) clearInterval(interval);
+        },30);
+      });
+    }
+    const heroObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => { if(e.isIntersecting) animateCounters(); });
+    },{threshold:0.5});
+    heroObserver.observe(document.querySelector('.hero-stats'));
+    // Feature cards animation
+    const featureObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if(e.isIntersecting){
+          const delay = e.target.dataset.delay || 0;
+          setTimeout(()=> e.target.classList.add('visible'), delay);
+        }
+      });
+    },{threshold:0.1});
+    document.querySelectorAll('.feature-card').forEach(c => featureObserver.observe(c));
+    function scrollToLogin(){
+      document.getElementById('authSection').scrollIntoView({behavior:'smooth'});
+    }
+    // Load events preview
+    window.addEventListener('load', () => {
+      checkLoginState();
+      loadEventsPreview();
+    });
+    function loadEventsPreview(){
+      const events = JSON.parse(localStorage.getItem('sc_events')) || getDefaultEvents();
+      const container = document.getElementById('eventsPreview');
+      const preview = events.slice(0,3);
+      container.innerHTML = preview.map(ev => `
+        <div class="event-preview-card">
+          <div class="ev-cat-badge" style="background:${ev.color}22;color:${ev.color}">${ev.category}</div>
+          <h3>${ev.title}</h3>
+          <p class="ev-date"><i class="fas fa-calendar"></i> ${ev.date}</p>
+          <p class="ev-loc"><i class="fas fa-map-marker-alt"></i> ${ev.location}</p>
+          <div class="ev-footer">
+            <span class="ev-seats"><i class="fas fa-users"></i> ${ev.seats} seats left</span>
+            <button class="btn-sm" onclick="window.location.href='events.html'">Register</button>
+          </div>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>

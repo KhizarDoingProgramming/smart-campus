@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Events — Smart Campus Hub</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="page-body">
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-brand" onclick="window.location.href='index.html'">
+      <span class="brand-icon">🎓</span>
+      <span class="brand-text">Smart<span class="accent">Campus</span></span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html" class="active">Events</a></li>
+      <li><a href="societies.html">Societies</a></li>
+      <li><a href="feedback.html">Feedback</a></li>
+      <li><a href="profile.html" id="navProfile" style="display:none">My Profile</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span id="loggedUserNav" class="logged-user-nav" style="display:none"></span>
+      <button class="btn-login-nav" id="loginNavBtn" onclick="window.location.href='index.html#authSection'">Login</button>
+      <button class="btn-logout-nav" id="logoutNavBtn" style="display:none" onclick="logoutUser()">Logout</button>
+    </div>
+  </nav>
+  <div class="page-header">
+    <h1>🗓️ Campus Events</h1>
+    <p>Register for exciting events happening around campus</p>
+  </div>
+  <div id="react-search-root" style="padding: 0 5%; margin-bottom: 1rem;"></div>
+  <div class="events-page">
+    <div class="events-controls">
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" id="eventSearch" placeholder="Search events..." oninput="filterEvents()" />
+      </div>
+      <select class="filter-select" id="categoryFilter" onchange="filterEvents()">
+        <option value="All">All Categories</option>
+        <option value="Technology">Technology</option>
+        <option value="Cultural">Cultural</option>
+        <option value="Workshop">Workshop</option>
+        <option value="Business">Business</option>
+        <option value="Arts">Arts</option>
+        <option value="Academic">Academic</option>
+        <option value="Sports">Sports</option>
+      </select>
+      <select class="filter-select" id="sortFilter" onchange="filterEvents()">
+        <option value="date">Sort by Date</option>
+        <option value="seats">Sort by Seats</option>
+        <option value="name">Sort by Name</option>
+      </select>
+    </div>
+    <div class="events-grid" id="eventsGrid"></div>
+  </div>
+  <div id="toast" class="toast"></div>
+  <script src="js/auth.js"></script>
+  <script src="js/events.js"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    // ---- REACT COMPONENT (10%) ---- //
+    const { useState, useEffect } = React;
+    function EventSearchWidget() {
+      const [query, setQuery] = useState('');
+      const [suggestions, setSuggestions] = useState([]);
+      const [showSug, setShowSug] = useState(false);
+      useEffect(() => {
+        if (query.length > 1) {
+          const events = JSON.parse(localStorage.getItem('sc_events')) || [];
+          const filtered = events.filter(e =>
+            e.title.toLowerCase().includes(query.toLowerCase()) ||
+            e.category.toLowerCase().includes(query.toLowerCase())
+          ).slice(0, 4);
+          setSuggestions(filtered);
+          setShowSug(true);
+        } else {
+          setSuggestions([]);
+          setShowSug(false);
+        }
+      }, [query]);
+      function selectSuggestion(title) {
+        const mainSearch = document.getElementById('eventSearch');
+        if (mainSearch) {
+          mainSearch.value = title;
+          filterEvents();
+        }
+        setQuery(title);
+        setShowSug(false);
+        document.getElementById('eventsPage').scrollIntoView({ behavior: 'smooth' });
+      }
+      return (
+        <div style={{ maxWidth: '500px', position: 'relative', marginBottom: '0.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', background: '#1E1E35', border: '1.5px solid rgba(108,99,255,0.4)', borderRadius: '12px', padding: '0.5rem 1rem', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1rem' }}>🔮</span>
+            <input
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              placeholder="Smart search with suggestions..."
+              style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', color: '#E8E8F0', fontFamily: 'DM Sans, sans-serif', fontSize: '0.9rem' }}
+            />
+            <span style={{ fontSize: '0.7rem', background: 'rgba(108,99,255,0.2)', color: '#6C63FF', padding: '2px 8px', borderRadius: '50px', fontWeight: 700 }}>React</span>
+          </div>
+          {showSug && suggestions.length > 0 && (
+            <div style={{ position: 'absolute', top: '110%', left: 0, right: 0, background: '#1A1A2E', border: '1px solid rgba(108,99,255,0.3)', borderRadius: '12px', overflow: 'hidden', zIndex: 100, boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }}>
+              {suggestions.map(ev => (
+                <div key={ev.id} onClick={() => selectSuggestion(ev.title)}
+                  style={{ padding: '0.7rem 1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.7rem', transition: 'background 0.2s', borderBottom: '1px solid rgba(255,255,255,0.05)' }}
+                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(108,99,255,0.15)'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                  <span>{ev.emoji}</span>
+                  <div>
+                    <div style={{ color: '#E8E8F0', fontWeight: 600, fontSize: '0.9rem' }}>{ev.title}</div>
+                    <div style={{ color: '#9999BB', fontSize: '0.75rem' }}>{ev.category} • {ev.date}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+    const root = ReactDOM.createRoot(document.getElementById('react-search-root'));
+    root.render(<EventSearchWidget />);
+  </script>
+  <script>
+    function filterEvents() {
+      const search = document.getElementById('eventSearch').value;
+      const category = document.getElementById('categoryFilter').value;
+      renderEvents(search, category);
+    }
+    window.addEventListener('load', () => {
+      checkLoginState();
+      renderEvents();
+    });
+  </script>
+  <div id="eventsPage"></div>
+</body>
+</html>

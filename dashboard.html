@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — Smart Campus Hub</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="page-body">
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-brand" onclick="window.location.href='index.html'">
+      <span class="brand-icon">🎓</span>
+      <span class="brand-text">Smart<span class="accent">Campus</span></span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="societies.html">Societies</a></li>
+      <li><a href="feedback.html">Feedback</a></li>
+      <li><a href="profile.html" id="navProfile">My Profile</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span id="loggedUserNav" class="logged-user-nav" style="display:none"></span>
+      <button class="btn-login-nav" id="loginNavBtn" onclick="window.location.href='index.html#authSection'" style="display:none">Login</button>
+      <button class="btn-logout-nav" id="logoutNavBtn" onclick="logoutUser()">Logout</button>
+    </div>
+  </nav>
+  <div class="page-header">
+    <h1 id="dashWelcome">👋 Welcome back!</h1>
+    <p>Here's your campus activity overview</p>
+  </div>
+  <div class="dashboard-page">
+    <div class="dashboard-grid" id="dashboardGrid">
+      <div class="dash-card">
+        <div class="dash-icon">📅</div>
+        <h3 id="dashEventsCount">0</h3>
+        <p>Events Registered</p>
+      </div>
+      <div class="dash-card">
+        <div class="dash-icon">👥</div>
+        <h3 id="dashSocietiesCount">0</h3>
+        <p>Societies Joined</p>
+      </div>
+      <div class="dash-card">
+        <div class="dash-icon">⭐</div>
+        <h3 id="dashReviewsCount">0</h3>
+        <p>Reviews Given</p>
+      </div>
+      <div class="dash-card">
+        <div class="dash-icon">🏆</div>
+        <h3 id="dashBadgesCount">0</h3>
+        <p>Badges Earned</p>
+      </div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;margin-bottom:2rem">
+      <h3 style="font-family:'Syne',sans-serif;color:var(--white);margin-bottom:1.5rem">⚡ Quick Actions</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:1rem">
+        <button class="btn-primary" onclick="window.location.href='events.html'"><i class="fas fa-calendar-plus"></i> Browse Events</button>
+        <button class="btn-ghost" onclick="window.location.href='societies.html'"><i class="fas fa-users-cog"></i> Join Societies</button>
+        <button class="btn-ghost" onclick="window.location.href='feedback.html'"><i class="fas fa-star"></i> Give Feedback</button>
+        <button class="btn-ghost" onclick="window.location.href='profile.html'"><i class="fas fa-user-edit"></i> Edit Profile</button>
+      </div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2rem">
+      <h3 style="font-family:'Syne',sans-serif;color:var(--white);margin-bottom:1.5rem">🗓️ Your Upcoming Events</h3>
+      <div class="activity-list" id="dashEventsList">
+        <p style="color:var(--text2)">No events registered. <a href="events.html" style="color:var(--primary)">Browse now →</a></p>
+      </div>
+    </div>
+  </div>
+  <div id="toast" class="toast"></div>
+  <script src="js/auth.js"></script>
+  <script src="js/events.js"></script>
+  <script src="js/societies.js"></script>
+  <script>
+    window.addEventListener('load', () => {
+      checkLoginState();
+      const user = getCurrentUser();
+      if (!user) { window.location.href = 'index.html'; return; }
+      document.getElementById('dashWelcome').textContent = `👋 Welcome back, ${user.name.split(' ')[0]}!`;
+      const userEvents = getUserEvents();
+      const userSocieties = getUserSocieties();
+      const reviews = JSON.parse(localStorage.getItem('sc_reviews')) || [];
+      const userReviews = reviews.filter(r => r.reviewer === user.name);
+      document.getElementById('dashEventsCount').textContent = userEvents.length;
+      document.getElementById('dashSocietiesCount').textContent = userSocieties.length;
+      document.getElementById('dashReviewsCount').textContent = userReviews.length;
+      document.getElementById('dashBadgesCount').textContent =
+        (userEvents.length > 0 ? 1 : 0) + (userSocieties.length > 0 ? 1 : 0) +
+        (userEvents.length >= 1 && userSocieties.length >= 1 ? 1 : 0) + 1; // +1 for First Step
+      const dashList = document.getElementById('dashEventsList');
+      if (userEvents.length > 0) {
+        dashList.innerHTML = userEvents.map(ev => `
+          <div class="activity-item">
+            <div class="activity-icon" style="background:${ev.color}22;color:${ev.color};font-size:1.3rem">${ev.emoji}</div>
+            <div class="activity-text" style="flex:1">
+              <strong>${ev.title}</strong>
+              <small>${ev.date} • ${ev.location}</small>
+            </div>
+            <span style="font-size:0.75rem;background:rgba(67,233,123,0.15);color:#43E97B;padding:3px 10px;border-radius:50px;font-weight:600">✓ Registered</span>
+          </div>
+        `).join('');
+      }
+    });
+  </script>
+</body>
+</html>

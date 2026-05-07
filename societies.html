@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Societies — Smart Campus Hub</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="page-body">
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-brand" onclick="window.location.href='index.html'">
+      <span class="brand-icon">🎓</span>
+      <span class="brand-text">Smart<span class="accent">Campus</span></span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="societies.html" class="active">Societies</a></li>
+      <li><a href="feedback.html">Feedback</a></li>
+      <li><a href="profile.html" id="navProfile" style="display:none">My Profile</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span id="loggedUserNav" class="logged-user-nav" style="display:none"></span>
+      <button class="btn-login-nav" id="loginNavBtn" onclick="window.location.href='index.html#authSection'">Login</button>
+      <button class="btn-logout-nav" id="logoutNavBtn" style="display:none" onclick="logoutUser()">Logout</button>
+    </div>
+  </nav>
+  <div class="page-header">
+    <h1>👥 Student Societies</h1>
+    <p>Find your tribe — join a society and grow together</p>
+  </div>
+  <div class="societies-page">
+    <div class="events-controls">
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" id="societySearch" placeholder="Search societies..." oninput="filterSocieties()" />
+      </div>
+      <select class="filter-select" id="societyCatFilter" onchange="filterSocieties()">
+        <option value="All">All Categories</option>
+        <option value="Technology">Technology</option>
+        <option value="Arts & Culture">Arts & Culture</option>
+        <option value="Academic">Academic</option>
+        <option value="Business">Business</option>
+        <option value="Sports">Sports</option>
+      </select>
+    </div>
+    <div class="societies-grid" id="societiesGrid"></div>
+  </div>
+  <div id="toast" class="toast"></div>
+  <script src="js/auth.js"></script>
+  <script src="js/events.js"></script>
+  <script src="js/societies.js"></script>
+  <script>
+    function filterSocieties() {
+      const search = document.getElementById('societySearch').value;
+      const cat = document.getElementById('societyCatFilter').value;
+      renderSocieties(search, cat);
+    }
+    window.addEventListener('load', () => {
+      checkLoginState();
+      renderSocieties();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Feedback — Smart Campus Hub</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="page-body">
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-brand" onclick="window.location.href='index.html'">
+      <span class="brand-icon">🎓</span>
+      <span class="brand-text">Smart<span class="accent">Campus</span></span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="societies.html">Societies</a></li>
+      <li><a href="feedback.html" class="active">Feedback</a></li>
+      <li><a href="profile.html" id="navProfile" style="display:none">My Profile</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span id="loggedUserNav" class="logged-user-nav" style="display:none"></span>
+      <button class="btn-login-nav" id="loginNavBtn" onclick="window.location.href='index.html#authSection'">Login</button>
+      <button class="btn-logout-nav" id="logoutNavBtn" style="display:none" onclick="logoutUser()">Logout</button>
+    </div>
+  </nav>
+  <div class="page-header">
+    <h1>⭐ Feedback & Ratings</h1>
+    <p>Share your experience and help improve campus events</p>
+  </div>
+  <div class="feedback-page">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;margin-bottom:2rem" id="ratingStats">
+      <p style="color:var(--text2);text-align:center">Loading stats...</p>
+    </div>
+    <div class="feedback-grid">
+      <div class="feedback-form-card">
+        <h3>✍️ Write a Review</h3>
+        <div class="form-group">
+          <label style="font-size:0.85rem;color:var(--text2);font-weight:600">Select Event</label>
+          <select id="feedbackEvent" class="filter-select" style="width:100%;margin-top:0.5rem">
+            <option value="">-- Choose an event --</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label style="font-size:0.85rem;color:var(--text2);font-weight:600;display:block;margin-bottom:0.8rem">Your Rating</label>
+          <div class="star-rating">
+            <span class="star" onclick="setRating(1)" onmouseover="hoverStars(1)" onmouseout="resetHover()">⭐</span>
+            <span class="star" onclick="setRating(2)" onmouseover="hoverStars(2)" onmouseout="resetHover()">⭐</span>
+            <span class="star" onclick="setRating(3)" onmouseover="hoverStars(3)" onmouseout="resetHover()">⭐</span>
+            <span class="star" onclick="setRating(4)" onmouseover="hoverStars(4)" onmouseout="resetHover()">⭐</span>
+            <span class="star" onclick="setRating(5)" onmouseover="hoverStars(5)" onmouseout="resetHover()">⭐</span>
+          </div>
+          <span id="ratingLabel" style="color:var(--primary);font-weight:600;font-size:0.9rem"></span>
+        </div>
+        <div class="form-group">
+          <label style="font-size:0.85rem;color:var(--text2);font-weight:600;display:block;margin-bottom:0.5rem">Your Review</label>
+          <textarea id="feedbackText"
+            style="width:100%;min-height:120px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:0.8rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;resize:vertical;transition:border-color 0.3s"
+            placeholder="Share your experience with this event... (minimum 10 characters)"
+            onfocus="this.style.borderColor='var(--primary)'"
+            onblur="this.style.borderColor='var(--border)'"></textarea>
+        </div>
+        <div id="feedbackError" class="error-msg" style="display:none"></div>
+        <button class="btn-submit" id="submitFeedbackBtn" onclick="submitFeedback()">
+          <i class="fas fa-paper-plane"></i> Submit Feedback
+        </button>
+        <div style="margin-top:1.5rem;padding:1rem;background:rgba(108,99,255,0.1);border:1px solid rgba(108,99,255,0.2);border-radius:var(--radius-sm)">
+          <p style="font-size:0.8rem;color:var(--text2)">💡 <strong style="color:var(--primary)">Tip:</strong> Your feedback helps organizers improve future events. Be honest and constructive!</p>
+        </div>
+      </div>
+      <div class="reviews-card">
+        <h3>💬 Student Reviews</h3>
+        <div id="reviewsList"></div>
+      </div>
+    </div>
+  </div>
+  <div id="toast" class="toast"></div>
+  <script src="js/auth.js"></script>
+  <script src="js/events.js"></script>
+  <script src="js/feedback.js"></script>
+  <script>
+    function hoverStars(val) {
+      document.querySelectorAll('.star').forEach((s, i) => {
+        s.style.filter = i < val ? 'grayscale(0)' : 'grayscale(1)';
+        s.style.opacity = i < val ? '1' : '0.4';
+        s.style.transform = i < val ? 'scale(1.2)' : 'scale(1)';
+      });
+    }
+    function resetHover() {
+      document.querySelectorAll('.star').forEach((s, i) => {
+        s.style.filter = i < selectedRating ? 'grayscale(0)' : 'grayscale(1)';
+        s.style.opacity = i < selectedRating ? '1' : '0.4';
+        s.style.transform = 'scale(1)';
+      });
+    }
+    window.addEventListener('load', () => {
+      checkLoginState();
+      initFeedback();
+    });
+  </script>
+</body>
+</html>

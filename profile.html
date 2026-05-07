@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile — Smart Campus Hub</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="page-body">
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-brand" onclick="window.location.href='index.html'">
+      <span class="brand-icon">🎓</span>
+      <span class="brand-text">Smart<span class="accent">Campus</span></span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="societies.html">Societies</a></li>
+      <li><a href="feedback.html">Feedback</a></li>
+      <li><a href="profile.html" class="active" id="navProfile">My Profile</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span id="loggedUserNav" class="logged-user-nav" style="display:none"></span>
+      <button class="btn-login-nav" id="loginNavBtn" onclick="window.location.href='index.html#authSection'">Login</button>
+      <button class="btn-logout-nav" id="logoutNavBtn" style="display:none" onclick="logoutUser()">Logout</button>
+    </div>
+  </nav>
+  <div class="page-header">
+    <h1>👤 My Profile</h1>
+    <p>Manage your account, events, and achievements</p>
+  </div>
+  <div class="profile-page">
+    <div class="profile-header">
+      <div class="profile-avatar" id="profileAvatar">A</div>
+      <div class="profile-info">
+        <h2 id="profileName">Loading...</h2>
+        <p id="profileDept" style="color:var(--text2)"></p>
+        <p id="profileRoll" style="color:var(--text3);font-size:0.85rem;margin-top:0.2rem"></p>
+        <div class="profile-badge"><i class="fas fa-star"></i> Campus Member</div>
+      </div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="big" id="statEvents">0</div>
+        <small>Events Registered</small>
+      </div>
+      <div class="stat-box">
+        <div class="big" id="statSocieties">0</div>
+        <small>Societies Joined</small>
+      </div>
+      <div class="stat-box">
+        <div class="big" id="statActivities">0</div>
+        <small>Total Activities</small>
+      </div>
+    </div>
+    <div class="profile-tabs">
+      <button class="ptab active" id="ptab-edit" onclick="switchProfileTab('edit')">✏️ Edit Profile</button>
+      <button class="ptab" id="ptab-events" onclick="switchProfileTab('events')">📅 My Events</button>
+      <button class="ptab" id="ptab-societies" onclick="switchProfileTab('societies')">👥 My Societies</button>
+      <button class="ptab" id="ptab-activity" onclick="switchProfileTab('activity')">📊 Activity</button>
+      <button class="ptab" id="ptab-badges" onclick="switchProfileTab('badges')">🏆 Badges</button>
+    </div>
+    <div class="profile-section active" id="section-edit">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2rem">
+        <h3 style="font-family:'Syne',sans-serif;color:var(--white);margin-bottom:1.5rem">Personal Information</h3>
+        <div class="form-row">
+          <div class="profile-form-group">
+            <label>Full Name</label>
+            <input type="text" id="editName" placeholder="Your full name" />
+          </div>
+          <div class="profile-form-group">
+            <label>Email</label>
+            <input type="text" id="editEmail" disabled style="opacity:0.5;cursor:not-allowed" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="profile-form-group">
+            <label>Department</label>
+            <input type="text" id="editDept" disabled style="opacity:0.5;cursor:not-allowed" />
+          </div>
+          <div class="profile-form-group">
+            <label>Roll Number</label>
+            <input type="text" id="editRoll" disabled style="opacity:0.5;cursor:not-allowed" />
+          </div>
+        </div>
+        <div class="profile-form-group">
+          <label>Bio (optional)</label>
+          <textarea id="editBio" placeholder="Tell something about yourself..."></textarea>
+        </div>
+        <button class="btn-submit" onclick="saveProfile()" style="width:auto;padding:0.7rem 2rem">
+          <i class="fas fa-save"></i> Save Changes
+        </button>
+        <hr style="border-color:var(--border);margin:2rem 0" />
+        <h3 style="font-family:'Syne',sans-serif;color:var(--white);margin-bottom:1.5rem">Change Password</h3>
+        <div class="form-row">
+          <div class="profile-form-group">
+            <label>Current Password</label>
+            <input type="password" id="currentPass" placeholder="Current password" />
+          </div>
+          <div class="profile-form-group">
+            <label>New Password</label>
+            <input type="password" id="newPass" placeholder="New password" />
+          </div>
+        </div>
+        <div class="profile-form-group" style="max-width:50%">
+          <label>Confirm New Password</label>
+          <input type="password" id="confirmPass" placeholder="Confirm new password" />
+        </div>
+        <div id="passError" class="error-msg" style="display:none"></div>
+        <div id="passSuccess" class="success-msg" style="display:none"></div>
+        <button class="btn-submit" onclick="changePassword()" style="width:auto;padding:0.7rem 2rem">
+          <i class="fas fa-lock"></i> Update Password
+        </button>
+      </div>
+    </div>
+    <div class="profile-section" id="section-events">
+      <div class="activity-list" id="userEventsList"></div>
+    </div>
+    <div class="profile-section" id="section-societies">
+      <div class="activity-list" id="userSocietiesList"></div>
+    </div>
+    <div class="profile-section" id="section-activity">
+      <div class="activity-list" id="activityFeed"></div>
+    </div>
+    <div class="profile-section" id="section-badges">
+      <p style="color:var(--text2);margin-bottom:1.5rem;font-size:0.9rem">Earn badges by participating in events and joining societies!</p>
+      <div class="badges-grid" id="badgesContainer"></div>
+    </div>
+  </div>
+  <div id="toast" class="toast"></div>
+  <script src="js/auth.js"></script>
+  <script src="js/events.js"></script>
+  <script src="js/societies.js"></script>
+  <script src="js/profile.js"></script>
+  <script>
+    window.addEventListener('load', () => {
+      checkLoginState();
+      if (!getCurrentUser()) {
+        window.location.href = 'index.html';
+        return;
+      }
+      loadProfile();
+    });
+  </script>
+</body>
+</html>
